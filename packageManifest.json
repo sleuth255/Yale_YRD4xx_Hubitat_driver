@@ -7,8 +7,8 @@
         "version": "0.1",
         "minimumHEVersion": "0.1",
         "dateReleased": "2026-07-21",
-        "category": "Lock",
-        "tags": "Locks & Switches",
+        "category": "Security",
+        "tags": ["Locks", "ZWave"],
         "drivers": [
            {
                   "id": "fa8c23fd-a00e-4010-8197-9a1613607932",
