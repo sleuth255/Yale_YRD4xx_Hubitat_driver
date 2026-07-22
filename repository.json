@@ -14,7 +14,7 @@
                   "id": "49327960-0246-4e85-94e0-cfa7f7ada784",
                   "name": "YaleAssure2",
                   "namespace": "HubitatCommunity",
-                  "location": "https://raw.githubusercontent.com/viertaxa/hubitat/main/Drivers/AeotecHEMGen5-2-Phase/aeotec-home-energy-monitor-gen-5-2-phase.groovy",
+                  "location": "https://github.com/sleuth255/yrd450driver/blob/master/yalelock.groovy",
                   "required": true,
                   "oauth": false,
                   "description": "Yale Assure Lock 2 with Doorsense and AYR-MOD-ZW3-USA ZWave module support"
