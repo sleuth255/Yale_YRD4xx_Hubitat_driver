@@ -11,7 +11,7 @@
         "tags": "Locks & Switches",
         "drivers": [
            {
-                  "id": "49327960-0246-4e85-94e0-cfa7f7ada784",
+                  "id": "fa8c23fd-a00e-4010-8197-9a1613607932",
                   "name": "YaleAssure2",
                   "namespace": "HubitatCommunity",
                   "location": "https://github.com/sleuth255/yrd450driver/blob/master/YaleAssure2.groovy",
