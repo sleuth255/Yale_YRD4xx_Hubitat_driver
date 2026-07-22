@@ -1,0 +1,12 @@
+{
+  "author": "Sleuth255",
+  "packages": [
+    {
+      "name": "Yale Assure Lock 2",
+      "category": "Drivers",
+      "location": "https://githubusercontent.com",
+      "description": "DoorSense and AYR-MOD-ZW3-USA module support",
+      "tags": ["Lock", "ZWave"]
+    }
+  ]
+}
