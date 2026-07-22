@@ -16,13 +16,13 @@
  *  - Lock Code Manager compatibility
  *  - Detailed Event Text Reporting
  *
- *  Developed by Trunzoc.  Development thread here:
+ *  Developed by Trunzoc.  Mods and fixes by Sleuth255. Development thread here:
  *  https://community.hubitat.com/t/adding-doorsense-to-z-wave-yale-driver
  *
  */
 
 metadata {
-    definition (name: "Yale Assure Lock 2", namespace: "Sleuth255", author: "Sleuth255") {
+    definition (name: "Yale Assure Lock 2", namespace: "Sleuth255", author: "Trunzoc") {
         capability "Actuator"
         capability "Lock"
         capability "Lock Codes"
