@@ -1,5 +1,5 @@
 /**
- * 	Yale Assure Lock 2 Hubitat Driver
+ * 	Yale Assure Lock 2
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License. You may obtain a copy of the License at:
@@ -15,14 +15,10 @@
  *  - DoorSense (Contact Sensor)
  *  - Lock Code Manager compatibility
  *  - Detailed Event Text Reporting
- *
- *  Developed by Trunzoc.  Mods and fixes by Sleuth255. Development thread here:
- *  https://community.hubitat.com/t/adding-doorsense-to-z-wave-yale-driver
- *
  */
 
 metadata {
-    definition (name: "Yale Assure Lock 2", namespace: "Sleuth255", author: "Trunzoc") {
+    definition (name: "Yale Assure Lock 2", namespace: "Trunzoc", author: "Trunzoc") {
         capability "Actuator"
         capability "Lock"
         capability "Lock Codes"
@@ -161,6 +157,9 @@ def zwaveEvent(NotificationReport cmd) {
 				if (txtEnable) log.info "${device.displayName} was closed"
 				sendEvent(name: "contact", value: "closed", descriptionText: "${device.displayName} was closed")
                 break
+            default:
+                log.info "Unknown event ${cmd.event} param0: ${cmd.eventParameter[0]} param1: ${cmd.eventParameter[1]}  param2: ${cmd.eventParameter[2]}"
+                break
         }
         if (map.value) sendEvent(map)
     }
@@ -245,6 +244,8 @@ private Map loadLockCodes() {
 
 private void updateLockCodes(lockCodes) {
 	if (traceEnable) log.trace "updateLockCodes(lockCodes): ${lockCodes}"
+    if (lockCodes.containsKey("251"))
+        lockCodes.remove("251")
     def json = new groovy.json.JsonOutput().toJson(lockCodes)
     sendEvent(name: "lockCodes", value: json, displayed: false, descriptionText: "Lock codes updated")
 }
@@ -277,9 +278,9 @@ def zwaveEvent(hubitat.zwave.commands.usercodev1.UsersNumberReport cmd) {
 	if (traceEnable) log.trace "zwaveEvent(hubitat.zwave.commands.usercodev1.UsersNumberReport cmd): ${cmd}"
     if (debugEnable) log.debug "UsersNumberReport: lock supports ${cmd.supportedUsers} codes"
     
-    // Update the maxCodes attribute so Lock Code Manager knows the limit
     //sendEvent(name: "maxCodes", value: cmd.supportedUsers, displayed: false)
-    //for some reason cmd.supportedUsers is returning 255 while max codes supported are actually 250
+    // Update the maxCodes attribute so Lock Code Manager knows the limit
+    // 250 user slots leaving 5 for firmware use (programming codes etc)
     sendEvent(name: "maxCodes", value: 250, displayed: false)
 }
 
@@ -302,6 +303,7 @@ def refresh() {
     sendHubCommand(new hubitat.device.HubMultiAction(cmds, hubitat.device.Protocol.ZWAVE))
 }
 
+// General App Events
 def configure() {
 	if (traceEnable) log.trace "configure()"
     log.info "Configuring Association Groups..."
@@ -315,9 +317,22 @@ def configure() {
     cmds << zwaveSecureEncap(zwave.doorLockV1.doorLockOperationGet())
     
     sendHubCommand(new hubitat.device.HubMultiAction(cmds, hubitat.device.Protocol.ZWAVE))
+    //set user slots to 250 leaving the last 5 for firmware use (programming codes etc)
     sendEvent(name: "maxCodes", value: 250, displayed: false)
 }
 
+def initialize() {
+    //set user slots to 250 leaving the last 5 for firmware use (programming codes etc)
+    sendEvent(name: "maxCodes", value: 250, displayed: false)
+}
+
+def installed(){
+	initialize()
+}
+
+def updated(){
+	initialize()
+}
 private executeCommand(command) {
 	if (traceEnable) log.trace "executeCommand(command): ${command}"
     sendHubCommand(new hubitat.device.HubAction(command, hubitat.device.Protocol.ZWAVE))
