@@ -35,6 +35,9 @@ metadata {
 		fingerprint mfr:"0129", prod:"8107", model:"49D2", deviceJoinName: "Yale Assure Lock 2 Touch, YRD420" //YRD420-F-ZW3
 		fingerprint mfr:"0129", prod:"8107", model:"49D3", deviceJoinName: "Yale Assure Lock 2 Touch, YRD430" //YRD430-F-ZW3
 		fingerprint mfr:"0129", prod:"8107", model:"49D5", deviceJoinName: "Yale Assure Lock 2 Touch, YRD450" //YRD450-F-ZW3
+
+        command "initialize", [[name:"Clear state variables, refresh current states"]]
+
     }
 
     preferences {
@@ -244,8 +247,6 @@ private Map loadLockCodes() {
 
 private void updateLockCodes(lockCodes) {
 	if (traceEnable) log.trace "updateLockCodes(lockCodes): ${lockCodes}"
-    if (lockCodes.containsKey("251"))
-        lockCodes.remove("251")
     def json = new groovy.json.JsonOutput().toJson(lockCodes)
     sendEvent(name: "lockCodes", value: json, displayed: false, descriptionText: "Lock codes updated")
 }
@@ -322,8 +323,13 @@ def configure() {
 }
 
 def initialize() {
-    //set user slots to 250 leaving the last 5 for firmware use (programming codes etc)
+    //set user slots to 250 leaving the last 5 for firmware use (programming codes etc) then clean up the json.
     sendEvent(name: "maxCodes", value: 250, displayed: false)
+    def lockCodes = loadLockCodes()
+    for (int i = 251; i < 256; i++)
+       if (lockCodes.containsKey(i.toString()))
+           lockCodes.remove(i.toString())
+    updateLockCodes(lockCodes)
 }
 
 def installed(){
