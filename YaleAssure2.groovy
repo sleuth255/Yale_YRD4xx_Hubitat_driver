@@ -1,7 +1,8 @@
-/**
+def getFwVersion() { return "1.00" }	// **** DEVICE DRIVER VERSION.
+/* 
  * 	Yale Assure Lock 2
  *
- *  Version 1.00.00  
+ *   Version 1.00 
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License. You may obtain a copy of the License at:
@@ -17,6 +18,9 @@
  *  - DoorSense (Contact Sensor)
  *  - Lock Code Manager compatibility
  *  - Detailed Event Text Reporting
+ *
+ *  Version History
+ *  v1.00	Initial Driver Release
  */
 
 metadata {
@@ -325,6 +329,7 @@ def configure() {
 }
 
 def initialize() {
+    state.fwVersion = getFwVersion()
     //set user slots to 250 leaving the last 5 for firmware use (programming codes etc) then clean up the json.
     sendEvent(name: "maxCodes", value: 250, displayed: false)
     def lockCodes = loadLockCodes()
