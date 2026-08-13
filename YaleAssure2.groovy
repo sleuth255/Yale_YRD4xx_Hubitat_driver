@@ -1,4 +1,4 @@
-def getFwVersion() { return "1.00" }	// **** DEVICE DRIVER VERSION.
+def getDriverVersion() { return "1.00" }	// **** DEVICE DRIVER VERSION.
 /* 
  * 	Yale Assure Lock 2
  *
@@ -329,7 +329,7 @@ def configure() {
 }
 
 def initialize() {
-    state.fwVersion = getFwVersion()
+    state.DriverVersion = getDriverVersion()
     //set user slots to 250 leaving the last 5 for firmware use (programming codes etc) then clean up the json.
     sendEvent(name: "maxCodes", value: 250, displayed: false)
     def lockCodes = loadLockCodes()
