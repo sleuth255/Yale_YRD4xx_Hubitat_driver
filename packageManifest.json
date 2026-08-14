@@ -1,12 +1,12 @@
 {
         "packageName": "Yale Assure Lock 2 Driver",
-        "releaseNotes": "v0.1  Initial Release",
+        "releaseNotes": "v1.00  Initial Release",
         "documentationLink": "https://community.hubitat.com/t/adding-doorsense-to-z-wave-yale-driver/145394",
         "communityLink": "https://community.hubitat.com/t/adding-doorsense-to-z-wave-yale-driver/145394",
-        "author": "Trunzoc",
-        "version": "0.1",
+        "author": "Trunzoc/Sleuth",
+        "version": "1.00",
         "minimumHEVersion": "0.1",
-        "dateReleased": "2026-07-21",
+        "dateReleased": "2026-08-13",
         "category": "Security",
         "tags": ["Locks", "ZWave"],
         "drivers": [
