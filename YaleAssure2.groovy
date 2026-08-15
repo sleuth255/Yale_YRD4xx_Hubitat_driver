@@ -1,8 +1,8 @@
-def getDriverVersion() { return "1.00" }	// **** DEVICE DRIVER VERSION.
+def getDriverVersion() { return "1.01" }	// **** DEVICE DRIVER VERSION.
 /* 
  * 	Yale Assure Lock 2
  *
- *   Version 1.00 
+ *   Version 1.01 
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License. You may obtain a copy of the License at:
@@ -21,6 +21,7 @@ def getDriverVersion() { return "1.00" }	// **** DEVICE DRIVER VERSION.
  *
  *  Version History
  *  v1.00	Initial Driver Release
+ *  v1.01   Update fingerprints for auto driver select
  */
 
 metadata {
@@ -33,14 +34,14 @@ metadata {
         capability "Configuration"
         capability "Refresh"
 
-		fingerprint mfr:"0129", prod:"8104", model:"45D1", deviceJoinName: "Yale Assure Lock 2, YRD410" //YRD410-ZW3
-		fingerprint mfr:"0129", prod:"8104", model:"45D2", deviceJoinName: "Yale Assure Lock 2, YRD420" //YRD420-ZW3
-		fingerprint mfr:"0129", prod:"8104", model:"45D3", deviceJoinName: "Yale Assure Lock 2, YRD430" //YRD430-ZW3
-		fingerprint mfr:"0129", prod:"8104", model:"45D5", deviceJoinName: "Yale Assure Lock 2, YRD450" //YRD450-ZW3
-		fingerprint mfr:"0129", prod:"8107", model:"49D1", deviceJoinName: "Yale Assure Lock 2 Touch, YRD410" //YRD410-F-ZW3
-		fingerprint mfr:"0129", prod:"8107", model:"49D2", deviceJoinName: "Yale Assure Lock 2 Touch, YRD420" //YRD420-F-ZW3
-		fingerprint mfr:"0129", prod:"8107", model:"49D3", deviceJoinName: "Yale Assure Lock 2 Touch, YRD430" //YRD430-F-ZW3
-		fingerprint mfr:"0129", prod:"8107", model:"49D5", deviceJoinName: "Yale Assure Lock 2 Touch, YRD450" //YRD450-F-ZW3
+		fingerprint mfr:"0129", prod:"8104", model:"45D1", controllerType: "ZWV", deviceJoinName: "Yale Assure Lock 2, YRD410" //YRD410-ZW3
+		fingerprint mfr:"0129", prod:"8104", model:"45D2", controllerType: "ZWV", deviceJoinName: "Yale Assure Lock 2, YRD420" //YRD420-ZW3
+		fingerprint mfr:"0129", prod:"8104", model:"45D3", controllerType: "ZWV", deviceJoinName: "Yale Assure Lock 2, YRD430" //YRD430-ZW3
+		fingerprint mfr:"0129", prod:"8104", model:"45D5", controllerType: "ZWV", deviceJoinName: "Yale Assure Lock 2, YRD450" //YRD450-ZW3
+		fingerprint mfr:"0129", prod:"8107", model:"49D1", controllerType: "ZWV", deviceJoinName: "Yale Assure Lock 2 Touch, YRD410" //YRD410-F-ZW3
+		fingerprint mfr:"0129", prod:"8107", model:"49D2", controllerType: "ZWV", deviceJoinName: "Yale Assure Lock 2 Touch, YRD420" //YRD420-F-ZW3
+		fingerprint mfr:"0129", prod:"8107", model:"49D3", controllerType: "ZWV", deviceJoinName: "Yale Assure Lock 2 Touch, YRD430" //YRD430-F-ZW3
+		fingerprint mfr:"0129", prod:"8107", model:"49D5", controllerType: "ZWV", deviceJoinName: "Yale Assure Lock 2 Touch, YRD450" //YRD450-F-ZW3
 
         command "initialize", [[name:"Clear state variables, refresh current states"]]
 
