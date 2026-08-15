@@ -34,12 +34,13 @@ metadata {
         capability "Configuration"
         capability "Refresh"
 
-      //commented fingerprints not tested
-        fingerprint mfr: "0129", prod: "8104", deviceId: "05D2", deviceJoinName: "Yale Assure Lock 2 Touchscreen Key(YRD430)"
-        fingerprint mfr: "0129", prod: "8104", deviceId: "45D2", deviceJoinName: "Yale Assure Lock 2 Touchscreen (YRD450)"
-        fingerprint mfr: "0129", prod: "8104", deviceId: "45D3", deviceJoinName: "Yale Assure Lock 2 (YRD420)"
-      //fingerprint mfr:"0129", prod:"8107", model:"45D1", deviceJoinName: "Yale Assure Lock 2 Touch, YRD410" //YRD410-F-ZW3
-	  //fingerprint mfr:"0129", prod:"8107", model:"45D5", deviceTypeId: 139, controllerType: "ZWV", deviceJoinName: "Yale Assure Lock 2 Touch, YRD450" //YRD450-F-ZW3
+        fingerprint mfr: "0129", prod: "8104", deviceId: "05D3", deviceJoinName: "Yale Assure Lock 2 push button ZW2 module (YRD430)"
+        fingerprint mfr: "0129", prod: "8104", deviceId: "05D5", deviceJoinName: "Yale Assure Lock 2 Touchscreen ZW2 module (YRD450)"
+        fingerprint mfr: "0129", prod: "8104", deviceId: "05D2", deviceJoinName: "Yale Assure Lock 2 Touchscreen Key ZW2 module(YRD420)"
+        fingerprint mfr: "0129", prod: "8104", deviceId: "45D3", deviceJoinName: "Yale Assure Lock 2 push button ZW3 module (YRD430)"
+        fingerprint mfr: "0129", prod: "8104", deviceId: "45D5", deviceJoinName: "Yale Assure Lock 2 Touchscreen ZW3 module (YRD450)"
+        fingerprint mfr: "0129", prod: "8104", deviceId: "45D2", deviceJoinName: "Yale Assure Lock 2 Touchscreen Key ZW3 module(YRD420)"
+	  //still need fingerprint for push button/key lock
 		
         command "initialize", [[name:"Clear state variables, refresh current states"]]
 
