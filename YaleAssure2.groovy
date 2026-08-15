@@ -28,7 +28,7 @@ metadata {
     definition (name: "Yale Assure Lock 2", namespace: "Trunzoc", author: "Trunzoc/Sleuth") {
         capability "Actuator"
         capability "Lock"
-        capability "Lock Codes"
+        capability "LockCodes"
         capability "ContactSensor"
         capability "Battery"
         capability "Configuration"
