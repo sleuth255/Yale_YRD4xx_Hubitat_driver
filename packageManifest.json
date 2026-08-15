@@ -1,10 +1,10 @@
 {
         "packageName": "Yale Assure Lock 2 Driver",
-        "releaseNotes": "v1.00  Initial Release",
+        "releaseNotes": "v1.01  add controllertype to fingerprint",
         "documentationLink": "https://community.hubitat.com/t/adding-doorsense-to-z-wave-yale-driver/145394",
         "communityLink": "https://community.hubitat.com/t/adding-doorsense-to-z-wave-yale-driver/145394",
         "author": "Trunzoc/Sleuth",
-        "version": "1.00",
+        "version": "1.01",
         "minimumHEVersion": "0.1",
         "dateReleased": "2026-08-13",
         "category": "Security",
