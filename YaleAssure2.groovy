@@ -1,8 +1,8 @@
-def getDriverVersion() { return "1.02" }	// **** DEVICE DRIVER VERSION.
+def getDriverVersion() { return "1.03" }	// **** DEVICE DRIVER VERSION.
 /* 
  * 	Yale Assure Lock 2
  *
- *   Version 1.02 
+ *   Version 1.03 
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License. You may obtain a copy of the License at:
@@ -25,7 +25,8 @@ def getDriverVersion() { return "1.02" }	// **** DEVICE DRIVER VERSION.
  *  v1.02   fix the ZW2 usercode delete issue 
  *          ID module type and store in state 
  *          add device fingerprints for all non-fingerprint unlock capable locks with both ZW2 and ZW3 modules.
- */
+ *  v1.03   work around ZW3 usercode maintenance bug in firmware v1.3.28
+*/
 
 metadata {
     definition (name: "Yale Assure Lock 2", namespace: "Trunzoc", author: "Trunzoc/Sleuth") {
@@ -170,7 +171,8 @@ def zwaveEvent(NotificationReport cmd) {
                 executeCommand(zwaveSecureEncap(zwave.userCodeV1.userCodeGet(userIdentifier: slotId)))
                 return
             case 0x0E: // Code Added/Changed
-                def slotId = cmd.eventParameter[0]
+                //def slotId = cmd.eventParameter[0]
+                def slotId = state.slotId
                 if (txtEnable) log.info "${device.displayName} syncing code ${slotId}..."
                 executeCommand(zwaveSecureEncap(zwave.userCodeV1.userCodeGet(userIdentifier: slotId)))
                 return
@@ -226,8 +228,13 @@ def zwaveEvent(UserCodeReport cmd) {
     
     if (cmd.userIdStatus == UserCodeReport.USER_ID_STATUS_OCCUPIED) {
         def pin = cmd.userCode.toString()
-        if (!lockCodes.containsKey(codePosition) || lockCodes[codePosition].code != pin) {
+        if (!lockCodes.containsKey(codePosition)) {
             lockCodes[codePosition] = [name: "User ${codePosition}", code: pin, status: "active"]
+            sendEvent(name: "codeChanged", value: "${codePosition} updated", descriptionText: "Code position ${codePosition} updated", isStateChange: true)
+        }
+        else
+        if (lockCodes[codePosition].code != pin) {
+            lockCodes[codePosition] = [name: LockCodes[codePosition].name, code: pin, status: "active"]
             sendEvent(name: "codeChanged", value: "${codePosition} updated", descriptionText: "Code position ${codePosition} updated", isStateChange: true)
         }
     } else {
@@ -242,6 +249,7 @@ def zwaveEvent(UserCodeReport cmd) {
 def setCode(codePosition, pin, codeName = null) {
 	if (traceEnable) log.trace "setCode(codePosition, pin, codeName = null): ${codePosition}, ${pin}, ${codeName}"
     if (!codeName) codeName = "User ${codePosition}"
+    state.slotId = codePosition
     def lockCodes = loadLockCodes()
     lockCodes[codePosition.toString()] = [name: codeName, code: pin.toString(), status: "active"]
     updateLockCodes(lockCodes)
