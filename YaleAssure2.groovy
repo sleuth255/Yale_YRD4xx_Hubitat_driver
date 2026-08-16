@@ -40,7 +40,7 @@ metadata {
         fingerprint mfr: "0129", prod: "8104", deviceId: "05D2", deviceJoinName: "Yale Assure Lock 2 Touchscreen Key ZW2 module(YRD420)"
         fingerprint mfr: "0129", prod: "8104", deviceId: "45D3", deviceJoinName: "Yale Assure Lock 2 push button ZW3 module (YRD430)"
         fingerprint mfr: "0129", prod: "8104", deviceId: "45D5", deviceJoinName: "Yale Assure Lock 2 Touchscreen ZW3 module (YRD450)"
-        fingerprint mfr: "0129", prod: "8104", deviceId: "45D1", deviceJoinName: "Yale Assure Lock 2 push button Key ZW2 module(YRD410)"
+        fingerprint mfr: "0129", prod: "8104", deviceId: "45D1", deviceJoinName: "Yale Assure Lock 2 push button Key ZW3 module(YRD410)"
         fingerprint mfr: "0129", prod: "8104", deviceId: "45D2", deviceJoinName: "Yale Assure Lock 2 Touchscreen Key ZW3 module(YRD420)"
         
         command "initialize", [[name:"Clear state variables, refresh current states"]]
