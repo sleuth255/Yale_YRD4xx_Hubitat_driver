@@ -22,9 +22,9 @@ def getDriverVersion() { return "1.02" }	// **** DEVICE DRIVER VERSION.
  *  Version History
  *  v1.00	Initial Driver Release
  *  v1.01   Update fingerprints for auto driver select
- *  v1.02   fixes the ZW2 usercode delete issue 
- *          IDs module type and stores in state 
- *          adds device fingerprints for all non-fingerprint unlock capable locks with both ZW2 and ZW3 modules.
+ *  v1.02   fix the ZW2 usercode delete issue 
+ *          ID module type and store in state 
+ *          add device fingerprints for all non-fingerprint unlock capable locks with both ZW2 and ZW3 modules.
  */
 
 metadata {
