@@ -162,7 +162,7 @@ def zwaveEvent(NotificationReport cmd) {
 				state.remove("lastCodeName")
                 break
             case 0x0D: // Code Deleted
-                def slotId = state.deleteCode
+                def slotId = state.slotId
                 if (txtEnable) log.info "${device.displayName} deleting lockcode ${slotId}..."
                 executeCommand(zwaveSecureEncap(zwave.userCodeV1.userCodeGet(userIdentifier: slotId)))
                 return
@@ -249,7 +249,7 @@ def setCode(codePosition, pin, codeName = null) {
 def deleteCode(codePosition) {
 	if (traceEnable) log.trace "deleteCode(codePosition): ${codePosition}"
     log.info "deleting code ${codePosition}"
-    state.deleteCode = codePosition
+    state.slotId = codePosition
     executeCommand(zwaveSecureEncap(zwave.userCodeV1.userCodeSet(userIdentifier: codePosition, userIdStatus: 0)))
 }
 
@@ -351,7 +351,7 @@ def configure() {
 
 def initialize() {
     state.DriverVersion = getDriverVersion()
-    state.deleteCode = 0
+    state.slotId = 0
 
     //detect zwave module that's installed
     def firstChar = getZWaveDeviceId().take(1) // or myString[0]
