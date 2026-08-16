@@ -1,10 +1,10 @@
 {
         "packageName": "Yale Assure Lock 2 Driver",
-        "releaseNotes": "v1.01  added valid fingerprints for touchscreen, non-touchscreen, and keyed touchscreen YRD4xx locks",
+        "releaseNotes": "v1.02  detect module type, fix usercode delete logic",
         "documentationLink": "https://community.hubitat.com/t/adding-doorsense-to-z-wave-yale-driver/145394",
         "communityLink": "https://community.hubitat.com/t/adding-doorsense-to-z-wave-yale-driver/145394",
         "author": "Trunzoc/Sleuth",
-        "version": "1.01",
+        "version": "1.02",
         "minimumHEVersion": "0.1",
         "dateReleased": "2026-08-13",
         "category": "Security",
