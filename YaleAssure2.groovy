@@ -1,8 +1,8 @@
-def getDriverVersion() { return "1.01" }	// **** DEVICE DRIVER VERSION.
+def getDriverVersion() { return "1.02" }	// **** DEVICE DRIVER VERSION.
 /* 
  * 	Yale Assure Lock 2
  *
- *   Version 1.01 
+ *   Version 1.02 
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License. You may obtain a copy of the License at:
@@ -41,7 +41,7 @@ metadata {
         fingerprint mfr: "0129", prod: "8104", deviceId: "45D5", deviceJoinName: "Yale Assure Lock 2 Touchscreen ZW3 module (YRD450)"
         fingerprint mfr: "0129", prod: "8104", deviceId: "45D2", deviceJoinName: "Yale Assure Lock 2 Touchscreen Key ZW3 module(YRD420)"
 	  //still need fingerprint for push button/key lock (YRD410)
-		
+        
         command "initialize", [[name:"Clear state variables, refresh current states"]]
 
     }
@@ -53,10 +53,28 @@ metadata {
     }
 }
 
+
 import hubitat.zwave.commands.doorlockv1.*
 import hubitat.zwave.commands.usercodev1.*
 import hubitat.zwave.commands.notificationv3.*
 import hubitat.zwave.commands.supervisionv1.*
+
+// --- Device Identification    
+def getZWaveDeviceId() {
+    def decimalId = device.getDataValue("deviceId")
+    if (!decimalId) return null
+    
+    try {
+        // Convert the decimal string to an integer
+        int idInt = Integer.parseInt(decimalId)
+        
+        // Format to a 4-character, upper-case, padded Hex string
+        return String.format("%04X", idInt)
+    } catch (NumberFormatException e) {
+        // Fallback in case it's already a non-numeric/hex string 
+        return decimalId
+    }
+}
 
 // --- Core Z-Wave Parsing ---
 def parse(String description) {
@@ -143,8 +161,8 @@ def zwaveEvent(NotificationReport cmd) {
 				state.remove("lastCodeName")
                 break
             case 0x0D: // Code Deleted
-                def slotId = cmd.eventParameter[1]
-                if (txtEnable) log.info "${device.displayName} deleting code ${slotId}..."
+                def slotId = state.deleteCode
+                if (txtEnable) log.info "${device.displayName} deleting lockcode ${slotId}..."
                 executeCommand(zwaveSecureEncap(zwave.userCodeV1.userCodeGet(userIdentifier: slotId)))
                 return
             case 0x0E: // Code Added/Changed
@@ -229,6 +247,8 @@ def setCode(codePosition, pin, codeName = null) {
 
 def deleteCode(codePosition) {
 	if (traceEnable) log.trace "deleteCode(codePosition): ${codePosition}"
+    log.info "deleting code ${codePosition}"
+    state.deleteCode = codePosition
     executeCommand(zwaveSecureEncap(zwave.userCodeV1.userCodeSet(userIdentifier: codePosition, userIdStatus: 0)))
 }
 
@@ -330,6 +350,20 @@ def configure() {
 
 def initialize() {
     state.DriverVersion = getDriverVersion()
+    state.deleteCode = 0
+
+    //detect zwave module that's installed
+    def firstChar = getZWaveDeviceId().take(1) // or myString[0]
+    if (firstChar == "0") {
+        log.info "ZW2 module detected"
+        state.module = "ZW2"
+    } else if (firstChar == "4") {
+        log.info "ZW3 module detected"
+        state.module = "ZW3"
+    } else {
+        log.info "Unknown module detected"
+    }
+    
     //set user slots to 250 leaving the last 5 for firmware use (programming codes etc) then clean up the json.
     sendEvent(name: "maxCodes", value: 250, displayed: false)
     def lockCodes = loadLockCodes()
