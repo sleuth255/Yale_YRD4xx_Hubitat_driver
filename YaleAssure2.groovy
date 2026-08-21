@@ -1,8 +1,8 @@
-def getDriverVersion() { return "1.03" }	// **** DEVICE DRIVER VERSION.
+def getDriverVersion() { return "1.04" }	// **** DEVICE DRIVER VERSION.
 /* 
  * 	Yale Assure Lock 2
  *
- *   Version 1.03 
+ *   Version 1.04 
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License. You may obtain a copy of the License at:
@@ -176,6 +176,10 @@ def zwaveEvent(NotificationReport cmd) {
                 if (txtEnable) log.info "${device.displayName} syncing code ${slotId}..."
                 executeCommand(zwaveSecureEncap(zwave.userCodeV1.userCodeGet(userIdentifier: slotId)))
                 return
+            case 0xFE: // Keypad Unlock with Fingerprint
+                map.value = "unlocked"
+                map.descriptionText = "${device.displayName} unlocked by Fingerprint match"
+                break
 			case 22: // Door Opened
             	map.name = contact
 				map.value = "open"
