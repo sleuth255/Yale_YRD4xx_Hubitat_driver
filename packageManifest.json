@@ -1,10 +1,10 @@
 {
         "packageName": "Yale Assure Lock 2 Driver",
-        "releaseNotes": "v1.03 lock firmware v1.3.28 usercode bug workaround",
+        "releaseNotes": "v1.04 lock catch fingerprint unlock",
         "documentationLink": "https://community.hubitat.com/t/adding-doorsense-to-z-wave-yale-driver/145394",
         "communityLink": "https://community.hubitat.com/t/adding-doorsense-to-z-wave-yale-driver/145394",
         "author": "Trunzoc/Sleuth",
-        "version": "1.03",
+        "version": "1.04",
         "minimumHEVersion": "0.1",
         "dateReleased": "2026-08-13",
         "category": "Security",
