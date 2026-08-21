@@ -1,6 +1,6 @@
 {
         "packageName": "Yale Assure Lock 2 Driver",
-        "releaseNotes": "v1.04 lock catch fingerprint unlock",
+        "releaseNotes": "v1.04 Catch fingerprint unlock",
         "documentationLink": "https://community.hubitat.com/t/adding-doorsense-to-z-wave-yale-driver/145394",
         "communityLink": "https://community.hubitat.com/t/adding-doorsense-to-z-wave-yale-driver/145394",
         "author": "Trunzoc/Sleuth",
