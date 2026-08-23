@@ -26,7 +26,7 @@ def getDriverVersion() { return "1.04" }	// **** DEVICE DRIVER VERSION.
  *          ID module type and store in state 
  *          add device fingerprints for all non-fingerprint unlock capable locks with both ZW2 and ZW3 modules.
  *  v1.03   work around ZW3 usercode maintenance bug in firmware v1.3.28
- *  v1.04   capture fingerprint unlock and reflect in lock state
+ *  v1.04   capture biometric fingerprint unlock and reflect in lock state
 */
 
 metadata {
