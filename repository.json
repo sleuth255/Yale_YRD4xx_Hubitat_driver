@@ -1,13 +1,13 @@
 {
   "author": "sleuth255",
-  "gitHubUrl": "https://github.com",
+  "gitHubUrl": "https://github.com/sleuth255/Yale_YRD4xx_Hubitat_driver",
   "payPalUrl": "",
   "packages": [
     {
-      "name": "Yale YRD4xx Hubitat Driver",
+      "name": "Yale Assure Lock 2 Hubitat Driver",
       "category": "Drivers",
       "location": "https://raw.githubusercontent.com/sleuth255/Yale_YRD4xx_Hubitat_driver/refs/heads/master/packageManifest.json",
-      "description": "Custom Hubitat driver for Yale YRD4xx series locks including DoorSense and ZW3 firmware workarounds."
+      "description": "Custom Hubitat driver for Yale assure lock 2 series locks including DoorSense and ZW3 module support"
     }
   ]
 }
