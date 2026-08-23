@@ -26,6 +26,7 @@ def getDriverVersion() { return "1.04" }	// **** DEVICE DRIVER VERSION.
  *          ID module type and store in state 
  *          add device fingerprints for all non-fingerprint unlock capable locks with both ZW2 and ZW3 modules.
  *  v1.03   work around ZW3 usercode maintenance bug in firmware v1.3.28
+ *  v1.04   capture fingerprint unlock and reflect in lock state
 */
 
 metadata {
@@ -42,10 +43,12 @@ metadata {
         fingerprint mfr: "0129", prod: "8104", deviceId: "05D5", deviceJoinName: "Yale Assure Lock 2 Touchscreen ZW2 module (YRD450)"
         fingerprint mfr: "0129", prod: "8104", deviceId: "05D1", deviceJoinName: "Yale Assure Lock 2 push button Key ZW2 module(YRD10)"
         fingerprint mfr: "0129", prod: "8104", deviceId: "05D2", deviceJoinName: "Yale Assure Lock 2 Touchscreen Key ZW2 module(YRD420)"
+        fingerprint mfr: "0129", prod: "8104", deviceId: "09D3", deviceJoinName: "Yale Assure Lock 2 Touch push button ZW2 (YRD430-F)"
         fingerprint mfr: "0129", prod: "8104", deviceId: "45D3", deviceJoinName: "Yale Assure Lock 2 push button ZW3 module (YRD430)"
         fingerprint mfr: "0129", prod: "8104", deviceId: "45D5", deviceJoinName: "Yale Assure Lock 2 Touchscreen ZW3 module (YRD450)"
         fingerprint mfr: "0129", prod: "8104", deviceId: "45D1", deviceJoinName: "Yale Assure Lock 2 push button Key ZW3 module(YRD410)"
         fingerprint mfr: "0129", prod: "8104", deviceId: "45D2", deviceJoinName: "Yale Assure Lock 2 Touchscreen Key ZW3 module(YRD420)"
+        fingerprint mfr: "0129", prod: "8104", deviceId: "49D3", deviceJoinName: "Yale Assure Lock 2 Touch push button ZW3 (YRD430-F)"
         
         command "initialize", [[name:"Clear state variables, refresh current states"]]
 
