@@ -17,7 +17,7 @@
                   "location": "https://raw.githubusercontent.com/sleuth255/Yale_YRD4xx_Hubitat_driver/refs/heads/master/YaleAssure2.groovy",
                   "required": true,
                   "oauth": false,
-                  "description": "Yale Assure Lock 2 with Doorsense and AYR-MOD-ZW3-USA ZWave module support"
+                  "description": "Yale Assure Lock 2 with Doorsense, Lockcode Manager and ZW3 ZWave module support"
            }
         ]
 }
