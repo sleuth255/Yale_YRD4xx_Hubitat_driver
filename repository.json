@@ -7,7 +7,8 @@
       "name": "Yale Assure Lock 2 Driver",
       "category": "Security",
       "location": "https://raw.githubusercontent.com/sleuth255/Yale_YRD4xx_Hubitat_driver/refs/heads/master/packageManifest.json",
-      "description": "Yale assure lock 2 series lock driver includes DoorSense, lockcode manager, biometric unlock and ZW3 module support"
+      "description": "Yale assure lock 2 series lock driver includes DoorSense, lockcode manager, biometric unlock and ZW3 module support",
+      "tags": ["Locks", "ZWave"]
     }
   ]
 }
