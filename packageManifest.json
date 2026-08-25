@@ -1,10 +1,10 @@
 {
         "packageName": "Yale Assure Lock 2 Driver",
-        "releaseNotes": "v1.04 Catch biometric fingerprint unlock",
+        "releaseNotes": "v1.05 add zwave fingerprints for all biometric lock variants",
         "documentationLink": "https://community.hubitat.com/t/adding-doorsense-to-z-wave-yale-driver/145394",
         "communityLink": "https://community.hubitat.com/t/adding-doorsense-to-z-wave-yale-driver/145394",
         "author": "Trunzoc/Sleuth",
-        "version": "1.04",
+        "version": "1.05",
         "minimumHEVersion": "0.1",
         "dateReleased": "2026-08-13",
         "category": "Security",
