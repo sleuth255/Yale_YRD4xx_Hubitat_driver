@@ -31,6 +31,7 @@ def getDriverVersion() { return "1.05" }	// **** DEVICE DRIVER VERSION.
  *  v1.06   fix typo in UserCodeReport handler, and undeclared commandClassVersions
  *          ignore truncated (1 digit) user code reports
  *          differentiate keypad vs fingerprint unlocks via v1 alarm type, and record (best guess) last code name for fingerprint
+ *          handle several more Access Control notifications (auto-lock, jam, etc.), and tag lock events with physical/digital
 */
 
 metadata {
@@ -158,28 +159,34 @@ def zwaveEvent(NotificationReport cmd) {
         switch (cmd.event) {
             case 0x01: // Manual Lock
                 map.value = "locked"
+                map.type = "physical"
                 map.descriptionText = "${device.displayName} was locked manually"
                 break
             case 0x02: // Manual Unlock
                 map.value = "unlocked"
+                map.type = "physical"
                 map.descriptionText = "${device.displayName} was unlocked manually"
                 break
             case 0x03: // RF/App Lock
                 map.value = "locked"
+                map.type = "digital"
                 map.descriptionText = "${device.displayName} was locked digitally"
                 break
             case 0x04: // RF/App Unlock
                 map.value = "unlocked"
+                map.type = "digital"
                 map.descriptionText = "${device.displayName} was unlocked digitally"
                 break
             case 0x05: // Keypad Lock
                 map.value = "locked"
+                map.type = "physical"
                 map.descriptionText = "${device.displayName} was locked via keypad"
                 break
             case 0x06: // Keypad or Fingerprint Unlock (With User Data)
                 def slotId = cmd.eventParameter[2]
                 def codeName = getCodeName(slotId)
                 map.value = "unlocked"
+                map.type = "physical"
                 // On at least some ZW3 variants, Yale reports both keypad and fingerprint unlocks
                 // as event 0x06 with identical event parameters, only distinguishing them in the
                 // legacy v1 alarm type.
@@ -190,6 +197,19 @@ def zwaveEvent(NotificationReport cmd) {
                 }
 				sendEvent(name: "lastCodeName", value: codeName)
 				state.remove("lastCodeName")
+                break
+            case 0x09: // Auto Lock
+                map.value = "locked"
+                map.type = "physical"
+                map.descriptionText = "${device.displayName} was auto-locked"
+                break
+            case 0x07: // Manual Not Fully Locked
+            case 0x08: // RF/App Not Fully Locked
+            case 0x0A: // Auto Lock Not Fully Locked
+            case 0x0B: // Lock Jammed
+                map.value = "unknown"
+                map.descriptionText "${device.displayName} is jammed"
+                log.warn map.descriptionText
                 break
             case 0x0D: // Code Deleted
                 def slotId = state.slotId
@@ -204,6 +224,7 @@ def zwaveEvent(NotificationReport cmd) {
                 return
             case 0xFE: // Keypad Unlock with Fingerprint
                 map.value = "unlocked"
+                map.type = "physical"
                 map.descriptionText = "${device.displayName} unlocked by Fingerprint match"
                 break
 			case 22: // Door Opened
