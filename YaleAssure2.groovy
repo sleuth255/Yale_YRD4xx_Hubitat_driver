@@ -29,6 +29,7 @@ def getDriverVersion() { return "1.05" }	// **** DEVICE DRIVER VERSION.
  *  v1.04   capture biometric fingerprint unlock and reflect in lock state
  *  v1.05   update zwave signatures to include biometric lock variants
  *  v1.06   fix typo in UserCodeReport handler, and undeclared commandClassVersions
+ *          ignore truncated (1 digit) user code reports
 */
 
 metadata {
@@ -249,6 +250,12 @@ def zwaveEvent(UserCodeReport cmd) {
     
     if (cmd.userIdStatus == UserCodeReport.USER_ID_STATUS_OCCUPIED) {
         def pin = cmd.userCode.toString()
+        // When adding a code, ZW3 has been obverved to send 3 UCRs: full code, first digit, then full code again.
+        // Usually this is fine since the last one takes, but sometimes it's dropped and we end up with the truncated version.
+        // This ignores any truncated code -- safe since Yale lock codes are min 4 digits anyway.
+        if (pin.length() == 1) {
+            return null
+        }
         if (!lockCodes.containsKey(codePosition)) {
             lockCodes[codePosition] = [name: "User ${codePosition}", code: pin, status: "active"]
             sendEvent(name: "codeChanged", value: "${codePosition} updated", descriptionText: "Code position ${codePosition} updated", isStateChange: true)
