@@ -1,4 +1,4 @@
-def getDriverVersion() { return "1.05" }	// **** DEVICE DRIVER VERSION.
+def getDriverVersion() { return "1.06" }	// **** DEVICE DRIVER VERSION.
 /* 
  * 	Yale Assure Lock 2
  *
@@ -209,7 +209,7 @@ def zwaveEvent(NotificationReport cmd) {
             case 0x0A: // Auto Lock Not Fully Locked
             case 0x0B: // Lock Jammed
                 map.value = "unknown"
-                map.descriptionText "${device.displayName} is jammed"
+                map.descriptionText = "${device.displayName} is jammed"
                 log.warn map.descriptionText
                 break
             case 0x0D: // Code Deleted
@@ -278,7 +278,7 @@ def zwaveEvent(UserCodeReport cmd) {
     
     if (cmd.userIdStatus == UserCodeReport.USER_ID_STATUS_OCCUPIED) {
         def pin = cmd.userCode.toString()
-        // When adding a code, ZW3 has been obverved to send 3 UCRs: full code, first digit, then full code again.
+        // When adding a code, ZW3 has been observed to send 3 UCRs: full code, first digit, then full code again.
         // Usually this is fine since the last one takes, but sometimes it's dropped and we end up with the truncated version.
         // This ignores any truncated code -- safe since Yale lock codes are min 4 digits anyway.
         if (pin.length() == 1) {
