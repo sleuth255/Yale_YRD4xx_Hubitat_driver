@@ -30,6 +30,7 @@ def getDriverVersion() { return "1.05" }	// **** DEVICE DRIVER VERSION.
  *  v1.05   update zwave signatures to include biometric lock variants
  *  v1.06   fix typo in UserCodeReport handler, and undeclared commandClassVersions
  *          ignore truncated (1 digit) user code reports
+ *          differentiate keypad vs fingerprint unlocks via v1 alarm type, and record (best guess) last code name for fingerprint
 */
 
 metadata {
@@ -175,11 +176,18 @@ def zwaveEvent(NotificationReport cmd) {
                 map.value = "locked"
                 map.descriptionText = "${device.displayName} was locked via keypad"
                 break
-            case 0x06: // Keypad Unlock (With User Data)
+            case 0x06: // Keypad or Fingerprint Unlock (With User Data)
                 def slotId = cmd.eventParameter[2]
                 def codeName = getCodeName(slotId)
                 map.value = "unlocked"
-                map.descriptionText = "${device.displayName} unlocked by ${codeName}"
+                // On at least some ZW3 variants, Yale reports both keypad and fingerprint unlocks
+                // as event 0x06 with identical event parameters, only distinguishing them in the
+                // legacy v1 alarm type.
+                if (cmd?.v1AlarmType == 0x91) {
+                    map.descriptionText = "${device.displayName} unlocked by Fingerprint match"
+                } else { // Keypad match observed as 0x13 but just defaulting here
+                    map.descriptionText = "${device.displayName} unlocked by ${codeName}"
+                }
 				sendEvent(name: "lastCodeName", value: codeName)
 				state.remove("lastCodeName")
                 break
