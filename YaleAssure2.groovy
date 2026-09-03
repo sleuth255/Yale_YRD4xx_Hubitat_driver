@@ -32,6 +32,7 @@ def getDriverVersion() { return "1.05" }	// **** DEVICE DRIVER VERSION.
  *          ignore truncated (1 digit) user code reports
  *          differentiate keypad vs fingerprint unlocks via v1 alarm type, and record (best guess) last code name for fingerprint
  *          handle several more Access Control notifications (auto-lock, jam, etc.), and tag lock events with physical/digital
+ *          clean up handling of open/close notifications
 */
 
 metadata {
@@ -227,19 +228,17 @@ def zwaveEvent(NotificationReport cmd) {
                 map.type = "physical"
                 map.descriptionText = "${device.displayName} unlocked by Fingerprint match"
                 break
-			case 22: // Door Opened
-            	map.name = contact
-				map.value = "open"
-				map.descriptionText = "${device.displayName} was opened"
-				if (txtEnable) log.info "${device.displayName} was opened"
-				sendEvent(name: "contact", value: "open", descriptionText: "${device.displayName} was opened")
-				break;
-            case 23: // Door Closed
-            	map.name = contact
-				map.value = "closed"
-				map.descriptionText = "${device.displayName} was closed"
-				if (txtEnable) log.info "${device.displayName} was closed"
-				sendEvent(name: "contact", value: "closed", descriptionText: "${device.displayName} was closed")
+            case 0x16: // Door Opened
+                map.name = "contact"
+                map.value = "open"
+                map.descriptionText = "${device.displayName} was opened"
+                if (txtEnable) log.info map.descriptionText
+                break;
+            case 0x17: // Door Closed
+                map.name = "contact"
+                map.value = "closed"
+                map.descriptionText = "${device.displayName} was closed"
+                if (txtEnable) log.info map.descriptionText
                 break
             default:
                 log.info "Unknown event ${cmd.event} param0: ${cmd.eventParameter[0]} param1: ${cmd.eventParameter[1]}  param2: ${cmd.eventParameter[2]}"
