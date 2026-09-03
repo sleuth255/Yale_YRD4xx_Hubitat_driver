@@ -2,7 +2,7 @@ def getDriverVersion() { return "1.05" }	// **** DEVICE DRIVER VERSION.
 /* 
  * 	Yale Assure Lock 2
  *
- *   Version 1.05 
+ *   Version 1.06
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License. You may obtain a copy of the License at:
@@ -28,6 +28,7 @@ def getDriverVersion() { return "1.05" }	// **** DEVICE DRIVER VERSION.
  *  v1.03   work around ZW3 usercode maintenance bug in firmware v1.3.28
  *  v1.04   capture biometric fingerprint unlock and reflect in lock state
  *  v1.05   update zwave signatures to include biometric lock variants
+ *  v1.06   fix typo in UserCodeReport handler, and undeclared commandClassVersions
 */
 
 metadata {
@@ -91,11 +92,17 @@ def getZWaveDeviceId() {
     }
 }
 
+// Command class versions, used for top-level parsing and for unwrapping the
+// Supervision / Security encapsulated commands.
+private Map getCommandClassVersions() {
+    return [0x98: 1, 0x62: 1, 0x71: 3, 0x80: 1, 0x85: 2, 0x86: 1, 0x63: 1, 0x6C: 1]
+}
+
 // --- Core Z-Wave Parsing ---
 def parse(String description) {
 	if (traceEnable) log.trace "parse(String description): ${description}"
     def result = null
-    def cmd = zwave.parse(description, [ 0x98: 1, 0x62: 1, 0x71: 3, 0x80: 1, 0x85: 2, 0x86: 1, 0x6C: 1 ])
+    def cmd = zwave.parse(description, commandClassVersions)
     if (cmd) {
         result = zwaveEvent(cmd)
         if (debugEnable) log.debug "Parsed ${cmd} to ${result.inspect()}"
@@ -117,7 +124,7 @@ def zwaveEvent(SupervisionGet cmd) {
 
 def zwaveEvent(hubitat.zwave.commands.securityv1.SecurityMessageEncapsulation cmd) {
 	if (traceEnable) log.trace "zwaveEvent(hubitat.zwave.commands.securityv1.SecurityMessageEncapsulation cmd): ${cmd}"
-    def encapsulatedCommand = cmd.encapsulatedCommand([0x62: 1, 0x71: 3, 0x80: 1, 0x85: 2, 0x63: 1, 0x98: 1, 0x86: 1])
+    def encapsulatedCommand = cmd.encapsulatedCommand(commandClassVersions)
     if (encapsulatedCommand) {
         return zwaveEvent(encapsulatedCommand)
     }
@@ -248,7 +255,7 @@ def zwaveEvent(UserCodeReport cmd) {
         }
         else
         if (lockCodes[codePosition].code != pin) {
-            lockCodes[codePosition] = [name: LockCodes[codePosition].name, code: pin, status: "active"]
+            lockCodes[codePosition] = [name: lockCodes[codePosition].name, code: pin, status: "active"]
             sendEvent(name: "codeChanged", value: "${codePosition} updated", descriptionText: "Code position ${codePosition} updated", isStateChange: true)
         }
     } else {
