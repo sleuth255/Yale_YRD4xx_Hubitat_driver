@@ -1,8 +1,8 @@
-def getDriverVersion() { return "1.05" }	// **** DEVICE DRIVER VERSION.
+def getDriverVersion() { return "1.06" }	// **** DEVICE DRIVER VERSION.
 /* 
  * 	Yale Assure Lock 2
  *
- *   Version 1.05 
+ *   Version 1.06 
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License. You may obtain a copy of the License at:
@@ -28,6 +28,7 @@ def getDriverVersion() { return "1.05" }	// **** DEVICE DRIVER VERSION.
  *  v1.03   work around ZW3 usercode maintenance bug in firmware v1.3.28
  *  v1.04   capture biometric fingerprint unlock and reflect in lock state
  *  v1.05   update zwave signatures to include biometric lock variants
+ *  v1.06   capture digital autolock
 */
 
 metadata {
@@ -156,6 +157,7 @@ def zwaveEvent(NotificationReport cmd) {
                 map.descriptionText = "${device.displayName} was unlocked manually"
                 break
             case 0x03: // RF/App Lock
+			case 0x09:
                 map.value = "locked"
                 map.descriptionText = "${device.displayName} was locked digitally"
                 break
