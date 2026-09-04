@@ -193,18 +193,16 @@ def zwaveEvent(NotificationReport cmd) {
                 map.descriptionText = "${device.displayName} unlocked by Fingerprint match"
                 break
 			case 22: // Door Opened
-            	map.name = contact
+            	map.name = "contact"
 				map.value = "open"
 				map.descriptionText = "${device.displayName} was opened"
 				if (txtEnable) log.info "${device.displayName} was opened"
-				sendEvent(name: "contact", value: "open", descriptionText: "${device.displayName} was opened")
 				break;
             case 23: // Door Closed
-            	map.name = contact
+            	map.name = "contact"
 				map.value = "closed"
 				map.descriptionText = "${device.displayName} was closed"
 				if (txtEnable) log.info "${device.displayName} was closed"
-				sendEvent(name: "contact", value: "closed", descriptionText: "${device.displayName} was closed")
                 break
             default:
                 log.info "Unknown event ${cmd.event} param0: ${cmd.eventParameter[0]} param1: ${cmd.eventParameter[1]}  param2: ${cmd.eventParameter[2]}"
