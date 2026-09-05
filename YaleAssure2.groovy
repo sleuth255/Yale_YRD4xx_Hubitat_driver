@@ -1,8 +1,8 @@
-def getDriverVersion() { return "1.06" }	// **** DEVICE DRIVER VERSION.
+def getDriverVersion() { return "1.07" }	// **** DEVICE DRIVER VERSION.
 /* 
  * 	Yale Assure Lock 2
  *
- *   Version 1.06 
+ *   Version 1.07 
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License. You may obtain a copy of the License at:
@@ -29,6 +29,7 @@ def getDriverVersion() { return "1.06" }	// **** DEVICE DRIVER VERSION.
  *  v1.04   capture biometric fingerprint unlock and reflect in lock state
  *  v1.05   update zwave signatures to include biometric lock variants
  *  v1.06   capture digital autolock
+ *  v1.07   adopt kdb-jc updates: jam detect, fingerprint unlock on keypad unlock event, ignore truncated lock codes
 */
 
 metadata {
@@ -150,32 +151,59 @@ def zwaveEvent(NotificationReport cmd) {
         switch (cmd.event) {
             case 0x01: // Manual Lock
                 map.value = "locked"
+                map.type = "physical"
                 map.descriptionText = "${device.displayName} was locked manually"
                 break
             case 0x02: // Manual Unlock
                 map.value = "unlocked"
+                map.type = "physical"
                 map.descriptionText = "${device.displayName} was unlocked manually"
                 break
             case 0x03: // RF/App Lock
-			case 0x09:
                 map.value = "locked"
+                map.type = "digital"
                 map.descriptionText = "${device.displayName} was locked digitally"
                 break
             case 0x04: // RF/App Unlock
                 map.value = "unlocked"
+                map.type = "digital"
                 map.descriptionText = "${device.displayName} was unlocked digitally"
                 break
             case 0x05: // Keypad Lock
                 map.value = "locked"
+                map.type = "physical"
                 map.descriptionText = "${device.displayName} was locked via keypad"
                 break
-            case 0x06: // Keypad Unlock (With User Data)
+            case 0x06: // Keypad or Fingerprint Unlock (With User Data)
                 def slotId = cmd.eventParameter[2]
                 def codeName = getCodeName(slotId)
                 map.value = "unlocked"
-                map.descriptionText = "${device.displayName} unlocked by ${codeName}"
-				sendEvent(name: "lastCodeName", value: codeName)
-				state.remove("lastCodeName")
+                map.type = "physical"
+                // On at least some ZW3 variants, Yale reports both keypad and fingerprint unlocks
+                // as event 0x06 with identical event parameters, only distinguishing them in the
+                // legacy v1 alarm type.
+                if (cmd?.v1AlarmType == 0x91) {
+                    map.descriptionText = "${device.displayName} unlocked by Fingerprint match"
+                    codeName = "Fingerprint"
+                } else { // Keypad match observed as 0x13 but just defaulting here
+                    map.descriptionText = "${device.displayName} unlocked by ${codeName}"
+                    map.data = [(slotId.toString()): [name: codeName]]
+                }
+			    sendEvent(name: "lastCodeName", value: codeName)
+			    state.remove("lastCodeName")
+                break
+            case 0x07: // Manual Not Fully Locked
+            case 0x08: // RF/App Not Fully Locked
+            case 0x0A: // Auto Lock Not Fully Locked
+            case 0x0B: // Lock Jammed
+                map.value = "unknown"
+                map.descriptionText = "${device.displayName} is jammed"
+                log.warn map.descriptionText
+                break
+            case 0x09: // Auto Lock
+                map.value = "locked"
+                map.type = "physical"
+                map.descriptionText = "${device.displayName} was auto-locked"
                 break
             case 0x0D: // Code Deleted
                 def slotId = state.slotId
@@ -188,21 +216,22 @@ def zwaveEvent(NotificationReport cmd) {
                 if (txtEnable) log.info "${device.displayName} syncing code ${slotId}..."
                 executeCommand(zwaveSecureEncap(zwave.userCodeV1.userCodeGet(userIdentifier: slotId)))
                 return
+            case 0x16: // Door Opened
+                map.name = "contact"
+                map.value = "open"
+                map.descriptionText = "${device.displayName} was opened"
+                if (txtEnable) log.info map.descriptionText
+                break;
+            case 0x17: // Door Closed
+                map.name = "contact"
+                map.value = "closed"
+                map.descriptionText = "${device.displayName} was closed"
+                if (txtEnable) log.info map.descriptionText
+                break
             case 0xFE: // Keypad Unlock with Fingerprint
                 map.value = "unlocked"
+                map.type = "physical"
                 map.descriptionText = "${device.displayName} unlocked by Fingerprint match"
-                break
-			case 22: // Door Opened
-            	map.name = "contact"
-				map.value = "open"
-				map.descriptionText = "${device.displayName} was opened"
-				if (txtEnable) log.info "${device.displayName} was opened"
-				break;
-            case 23: // Door Closed
-            	map.name = "contact"
-				map.value = "closed"
-				map.descriptionText = "${device.displayName} was closed"
-				if (txtEnable) log.info "${device.displayName} was closed"
                 break
             default:
                 log.info "Unknown event ${cmd.event} param0: ${cmd.eventParameter[0]} param1: ${cmd.eventParameter[1]}  param2: ${cmd.eventParameter[2]}"
@@ -242,6 +271,12 @@ def zwaveEvent(UserCodeReport cmd) {
     
     if (cmd.userIdStatus == UserCodeReport.USER_ID_STATUS_OCCUPIED) {
         def pin = cmd.userCode.toString()
+        // When adding a code, ZW3 has been observed to send 3 UCRs: full code, first digit, then full code again.
+        // Usually this is fine since the last one takes, but sometimes it's dropped and we end up with the truncated version.
+        // This ignores any truncated code -- safe since Yale lock codes are min 4 digits anyway.
+        if (pin.length() == 1) {
+            return null
+        }
         if (!lockCodes.containsKey(codePosition)) {
             lockCodes[codePosition] = [name: "User ${codePosition}", code: pin, status: "active"]
             sendEvent(name: "codeChanged", value: "${codePosition} updated", descriptionText: "Code position ${codePosition} updated", isStateChange: true)
