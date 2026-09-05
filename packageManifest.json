@@ -1,6 +1,6 @@
 {
         "packageName": "Yale Assure Lock 2 Driver",
-        "releaseNotes": "v1.07   adopt kdb-jc updates: jam detect, fingerprint on keypad unlock event, ignore truncated lock codes, rm lockcode trigger support",
+        "releaseNotes": "v1.07: adopt kdb-jc updates: jam detect, fingerprint on keypad unlock event, ignore truncated lock codes, rm lockcode trigger support",
         "documentationLink": "https://community.hubitat.com/t/release-yale-assure-lock-2-zwave-driver/165918",
         "communityLink": "https://community.hubitat.com/t/release-yale-assure-lock-2-zwave-driver/165918",
         "author": "Trunzoc/Sleuth",
